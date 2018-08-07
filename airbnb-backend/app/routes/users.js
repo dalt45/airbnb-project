@@ -5,7 +5,7 @@ const SALT = parseInt(process.env.SALT);
 const router = express.Router();
 router.use(params.expressMiddleware());
 
-router.post('/signup', (req,res) => {dev
+router.post('/signup', (req,res) => {
     const params = req.parameters;
     console.log(params);
     let userParams = params.require('user').permit('email','password').value();
@@ -33,6 +33,7 @@ router.post('/signup', (req,res) => {dev
         var numLower = 0;
         var numNums = 0;
         var numSpecials = 0;
+
         for(var i=0; i<pass.length; i++){
             if(anUpperCase.test(pass[i]))
                 numUpper++;
@@ -42,7 +43,7 @@ router.post('/signup', (req,res) => {dev
                 numSpecials++;
         }
     
-        if(numUpper < 1 || numNums < 1 || numSpecials <1){
+        if(numUpper < 1 || numNums < 1 || aSpecial < 1){
             obj.result=false;
             obj.error="Wrong Format!";
             return obj;
@@ -51,10 +52,10 @@ router.post('/signup', (req,res) => {dev
     }
 
    bcrypt.hash(userParams.password,SALT,(err, hash) =>{
-       userParams.password = hash;
-       let ifValidEmail = validateEmail(userParams.email)
-       let ifValidPass= isOkPass(userParams.password)
-       res.send(userParams,ifValidEmail,ifValidPass);
+    userParams.ifValidPass = isOkPass(userParams.password)
+    userParams.password = hash;
+    userParams.ifValidEmail = validateEmail(userParams.email)
+    res.send(userParams);
    })
 
 });
