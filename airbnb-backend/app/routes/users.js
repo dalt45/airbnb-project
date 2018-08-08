@@ -16,11 +16,11 @@ router.post('/signup', (req,res) => {
     }
 
     const isOkPass = (pass) => {
-        var anUpperCase = /[A-Z]/;
-        var aLowerCase = /[a-z]/; 
-        var aNumber = /[0-9]/;
-        var aSpecial = /[!|@|#|$|%|^|&|*|(|)|-|_]/;
-        var obj = {};
+        const anUpperCase = /[A-Z]/;
+        const aLowerCase = /[a-z]/; 
+        const aNumber = /[0-9]/;
+        const aSpecial = /[!|@|#|$|%|^|&|*|(|)|-|_]/;
+        const obj = {};
         obj.result = true;
     
         if(pass.length < 8){
@@ -29,10 +29,10 @@ router.post('/signup', (req,res) => {
             return obj;
         }
     
-        var numUpper = 0;
-        var numLower = 0;
-        var numNums = 0;
-        var numSpecials = 0;
+        let numUpper = 0;
+        let numLower = 0;
+        let numNums = 0;
+        let numSpecials = 0;
 
         for(var i=0; i<pass.length; i++){
             if(anUpperCase.test(pass[i]))
