@@ -1,9 +1,12 @@
 const express = require('express');
 const params = require('strong-params');
 const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
+const Users = require('../db/models/users')
 const SALT = parseInt(process.env.SALT);
 const router = express.Router();
 router.use(params.expressMiddleware());
+
 
 router.post('/signup', (req,res) => {
     const params = req.parameters;
@@ -55,9 +58,13 @@ router.post('/signup', (req,res) => {
     userParams.ifValidPass = isOkPass(userParams.password)
     userParams.password = hash;
     userParams.ifValidEmail = validateEmail(userParams.email)
-    res.send(userParams);
-   })
-
+    const user = new Users(userParams)
+    user.save().then((createdUser) => {
+        const token = jwt.sign(createdUser.toJSON(), 'devfrules')
+        res.send({token:token});
+        // o {token}
+    })
+    })
 });
 
 module.exports = router;

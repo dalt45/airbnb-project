@@ -2,7 +2,9 @@ version: '3'
 services:
   db:
     image: "mongo"
-
+    #environment:
+     # - ME_CONFIG_MONGODB_ADMINUSERNAME=root
+     #- ME_CONFIG_MONGODB_ADMINPASSWORD=password
   backend:
     image: 'backendairbnb'
     depends_on:
