@@ -18,6 +18,28 @@ router.post('/signup', (req,res) => {
         return re.test(email);
     }
 
+    const checkEmailUniqueness = (email) => {
+        Users.countDocuments({"email": email},(err,answer) => {
+            if (answer > 0 ){
+                console.log(answer)
+                console.log("Email Duplicate")
+                res.send("Email Duplicado")
+            }else{
+                bcrypt.hash(userParams.password,SALT,(err, hash) =>{
+                    //userParams.ifValidPass = isOkPass(userParams.password)
+                    userParams.password = hash;
+                    //userParams.ifValidEmail = validateEmail(userParams.email)
+                    const user = new Users(userParams)
+                    user.save().then((createdUser) => {
+                        const token = jwt.sign(createdUser.toJSON(), 'devfrules')
+                        res.send({token:token});
+                        // o {token}
+                    })
+                    })
+            }
+        })
+    }
+
     const isOkPass = (pass) => {
         const anUpperCase = /[A-Z]/;
         const aLowerCase = /[a-z]/; 
@@ -53,18 +75,7 @@ router.post('/signup', (req,res) => {
         }
         return obj;
     }
-
-   bcrypt.hash(userParams.password,SALT,(err, hash) =>{
-    userParams.ifValidPass = isOkPass(userParams.password)
-    userParams.password = hash;
-    userParams.ifValidEmail = validateEmail(userParams.email)
-    const user = new Users(userParams)
-    user.save().then((createdUser) => {
-        const token = jwt.sign(createdUser.toJSON(), 'devfrules')
-        res.send({token:token});
-        // o {token}
-    })
-    })
+    checkEmailUniqueness(userParams.email);
 });
 
 module.exports = router;
